@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>第二回 南風-パイカジ- 結〜 チケット予約</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    header {
+      background-color: #004d40;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      border-radius: 8px;
+    }
+    h1, h2 {
+      margin-top: 0;
+    }
+    .step {
+      margin-bottom: 30px;
+    }
+    .qty-select button {
+      margin: 0 10px;
+    }
+    .seat-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .seat {
+      background: #e0e0e0;
+      padding: 10px;
+      text-align: center;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .seat.selected {
+      background: #fbc02d;
+    }
+    .hidden {
+      display: none;
+    }
+    label, input, select {
+      display: block;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>第二回 南風-パイカジ- 結〜</h1>
+    <p>2025年11月24日（月）<br>昌賢学園まえばしホール（時間未定）</p>
+  </header>
+  <main>
+    <section class="step" id="step1">
+      <h2>① チケット枚数選択</h2>
+      <div class="qty-select">
+        大人：
+        <button onclick="changeQty('adult', -1)">−</button>
+        <span id="adultCount">0</span>
+        <button onclick="changeQty('adult', 1)">＋</button>
+      </div>
+      <div class="qty-select">
+        こども：
+        <button onclick="changeQty('child', -1)">−</button>
+        <span id="childCount">0</span>
+        <button onclick="changeQty('child', 1)">＋</button>
+      </div>
+      <button onclick="goToStep2()">次へ（座席選択）</button>
+    </section>
+
+    <section class="step hidden" id="step2">
+      <h2>② 座席を選んでください（中央ブロック）</h2>
+      <div class="seat-grid" id="seatGrid"></div>
+      <p id="seatMsg"></p>
+      <button id="toInfoBtn" onclick="goToStep3()" class="hidden">次へ（お客様情報）</button>
+    </section>
+
+    <section class="step hidden" id="step3">
+      <h2>③ お客様情報入力</h2>
+      <form id="reserveForm">
+        <label>氏名：<input type="text" name="name" required /></label>
+        <label>メールアドレス：<input type="email" name="email" required /></label>
+        <label>電話番号：<input type="tel" name="tel" required /></label>
+        <label>住所：<input type="text" name="address" required /></label>
+        <p>選択座席：<span id="seatSummary"></span></p>
+        <input type="hidden" name="seats" id="seatsInput" />
+        <button type="submit">仮予約する</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    let adult = 0, child = 0, selectedSeats = [];
+
+    function changeQty(type, delta) {
+      if (type === 'adult') {
+        adult = Math.max(0, adult + delta);
+        document.getElementById('adultCount').textContent = adult;
+      } else {
+        child = Math.max(0, child + delta);
+        document.getElementById('childCount').textContent = child;
+      }
+    }
+
+    function goToStep2() {
+      const total = adult + child;
+      if (total === 0) {
+        alert('1席以上を選んでください');
+        return;
+      }
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+      renderSeats(total);
+    }
+
+    function renderSeats(total) {
+      const grid = document.getElementById('seatGrid');
+      grid.innerHTML = '';
+      for (let i = 1; i <= 100; i++) {
+        const div = document.createElement('div');
+        const seatNo = 'C' + i;
+        div.className = 'seat';
+        div.textContent = seatNo;
+        div.onclick = () => toggleSeat(div, seatNo, total);
+        grid.appendChild(div);
+      }
+      updateSeatMsg(total);
+    }
+
+    function toggleSeat(div, seatNo, total) {
+      if (div.classList.contains('selected')) {
+        div.classList.remove('selected');
+        selectedSeats = selectedSeats.filter(s => s !== seatNo);
+      } else if (selectedSeats.length < total) {
+        div.classList.add('selected');
+        selectedSeats.push(seatNo);
+      }
+      updateSeatMsg(total);
+    }
+
+    function updateSeatMsg(total) {
+      const left = total - selectedSeats.length;
+      document.getElementById('seatMsg').textContent = left > 0 ?
+        `あと ${left} 席選んでください` : '選択完了！';
+      document.getElementById('toInfoBtn').classList.toggle('hidden', left > 0);
+    }
+
+    function goToStep3() {
+      document.getElementById('step2').classList.add('hidden');
+      document.getElementById('step3').classList.remove('hidden');
+      document.getElementById('seatSummary').textContent = selectedSeats.join(', ');
+      document.getElementById('seatsInput').value = selectedSeats.join(',');
+    }
+  </script>
+</body>
+</html>
