@@ -81,7 +81,8 @@
         <button onclick="changeQty('child', 1)">＋</button>
       </div>
       <button onclick="goToStep2()">次へ（座席選択）</button>
-    </section>
+      </section>
+     
 
     <section class="step hidden" id="step2">
       <h2>② 座席を選んでください（中央ブロック）</h2>
@@ -102,7 +103,11 @@
         <button type="submit">仮予約する</button>
       </form>
     </section>
-  </main>
+   <div id="back-button" style="display: none; margin-bottom: 1rem;">
+      <button onclick="goBackToBlock()">← ブロック選択に戻る</button>
+     </div> 
+
+ </main>
 
   <script>
     let adult = 0, child = 0, selectedSeats = [];
@@ -127,7 +132,25 @@
       document.getElementById('step2').classList.remove('hidden');
       renderSeats(total);
     }
+    unction showSeats(block) {
+  document.getElementById('back-button').style.display = 'block';
+  seatsDiv.innerHTML = '';
+  selected = [];
 
+  for (let i = 1; i <= 40; i++) {
+    const seat = document.createElement('div');
+    seat.className = 'seat';
+    seat.textContent = block + i + '番';
+    seat.onclick = () => toggleSeat(seat);
+    seatsDiv.appendChild(seat);
+  }
+}
+
+function goBackToBlock() {
+  document.getElementById('back-button').style.display = 'none';
+  seatsDiv.innerHTML = '';
+  selected = [];
+} 
     function renderSeats(total) {
       const grid = document.getElementById('seatGrid');
       grid.innerHTML = '';
