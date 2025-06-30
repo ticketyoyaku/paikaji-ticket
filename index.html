@@ -87,6 +87,7 @@
       <div class="seat-grid" id="seatGrid"></div>
       <p id="seatMsg"></p>
       <button id="toInfoBtn" onclick="goToStep3()" class="hidden">次へ（お客様情報）</button>
+      <button onclick="goBackToStep1()">← チケット枚数に戻る</button>
     </section>
 
     <section class="step hidden" id="step3">
@@ -102,9 +103,11 @@
       </form>
     </section>
 
-    <div id="back-button" style="display: none; margin-bottom: 1rem;">
-      <button onclick="goBackToBlock()">← ブロック選択に戻る</button>
-    </div>
+    <section class="step hidden" id="thankyou">
+      <h2>仮予約を受付致しました</h2>
+      <p>確認メールが届きますので、ご確認をお願いいたします。</p>
+      <button onclick="resetForm()">最初の画面に戻る</button>
+    </section>
   </main>
 
   <script>
@@ -128,30 +131,20 @@
       }
       document.getElementById('step1').classList.add('hidden');
       document.getElementById('step2').classList.remove('hidden');
-      document.getElementById('back-button').style.display = 'block';
       renderSeats(total);
     }
 
-    function goBackToBlock() {
-      document.getElementById('back-button').style.display = 'none';
+    function goBackToStep1() {
       document.getElementById('step2').classList.add('hidden');
       document.getElementById('step1').classList.remove('hidden');
-
-      const seatsDiv = document.getElementById('seatGrid');
-      seatsDiv.innerHTML = '';
       selectedSeats = [];
-      document.getElementById('seatMsg').textContent = '';
-      document.getElementById('toInfoBtn').classList.add('hidden');
-
-      adult = 0;
-      child = 0;
-      document.getElementById('adultCount').textContent = '0';
-      document.getElementById('childCount').textContent = '0';
+      updateSeatMsg(adult + child);
     }
 
     function renderSeats(total) {
       const grid = document.getElementById('seatGrid');
       grid.innerHTML = '';
+      selectedSeats = [];
       for (let i = 1; i <= 100; i++) {
         const div = document.createElement('div');
         const seatNo = 'C' + i;
@@ -186,6 +179,23 @@
       document.getElementById('step3').classList.remove('hidden');
       document.getElementById('seatSummary').textContent = selectedSeats.join(', ');
       document.getElementById('seatsInput').value = selectedSeats.join(',');
+    }
+
+    document.getElementById('reserveForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('step3').classList.add('hidden');
+      document.getElementById('thankyou').classList.remove('hidden');
+    });
+
+    function resetForm() {
+      adult = 0;
+      child = 0;
+      selectedSeats = [];
+      document.getElementById('adultCount').textContent = 0;
+      document.getElementById('childCount').textContent = 0;
+      document.getElementById('reserveForm').reset();
+      document.getElementById('thankyou').classList.add('hidden');
+      document.getElementById('step1').classList.remove('hidden');
     }
   </script>
 </body>
