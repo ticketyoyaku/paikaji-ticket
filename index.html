@@ -132,10 +132,11 @@
       document.getElementById('step2').classList.remove('hidden');
       renderSeats(total);
     }
-    unction showSeats(block) {
-  document.getElementById('back-button').style.display = 'block';
-  seatsDiv.innerHTML = '';
-  selected = [];
+    function showSeats(block) {
+      const seatDiv=document.getElementById('seatGriD7);
+      document.getElementById('back-button').style.display = 'block';
+      seatsDiv.innerHTML = '';
+      selected = [];
 
   for (let i = 1; i <= 40; i++) {
     const seat = document.createElement('div');
@@ -148,12 +149,20 @@
 
 function goBackToBlock() {
   document.getElementById('back-button').style.display = 'none';
-  seatsDiv.innerHTML = '';
-  selected = [];
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step1').classList.remove('hidden');
+  
+  const seatsDiv=document.getElemenById('seatGrid');
+  seatsDiv.InnerHTML='';
+  selectedSeats=[];
+  document.getElementById('seatMsg').textContent='';
+  document.getElementById('toInfoBtn').classList.add('hidden');
 } 
+    
     function renderSeats(total) {
       const grid = document.getElementById('seatGrid');
       grid.innerHTML = '';
+      
       for (let i = 1; i <= 100; i++) {
         const div = document.createElement('div');
         const seatNo = 'C' + i;
