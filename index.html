@@ -133,7 +133,7 @@
       renderSeats(total);
     }
     function showSeats(block) {
-      const seatDiv=document.getElementById('seatGriD7);
+      const seatDiv=document.getElementById('seatGrid');
       document.getElementById('back-button').style.display = 'block';
       seatsDiv.innerHTML = '';
       selected = [];
@@ -152,8 +152,8 @@ function goBackToBlock() {
   document.getElementById('step2').classList.add('hidden');
   document.getElementById('step1').classList.remove('hidden');
   
-  const seatsDiv=document.getElemenById('seatGrid');
-  seatsDiv.InnerHTML='';
+  const seatsDiv=document.getElementById('seatGrid');
+  seatsDiv.innerHTML='';
   selectedSeats=[];
   document.getElementById('seatMsg').textContent='';
   document.getElementById('toInfoBtn').classList.add('hidden');
